@@ -5,18 +5,17 @@ var html = path.join(__dirname,'../examples/index.html');
 var jsdom = require("jsdom");
 
 // this is an example of testing the component in the "browser"
-describe('boilerplateRedux browser tests', function() {
+describe('buttonRedux browser tests', function() {
     this.timeout(15000);
     // outline our tests
     var foo = false, // just a test var to make sure jsdom callback works
-        size, // var to determine if options can be set in config object
-        color, // var to determine if options can be set in config object
+        selected, // var to determine if options can be set in config object
+        //label, // var to determine if options can be set in config object
         initialState, // var to determine if intial state is set by options
-        grow10Div, // var to determine if component GROW Action affects DOM
-        grow10State, // var to determine if component GROW Action affects State
-        grow50State, // var to determine if component GROW Action (with params) works
-        resetState, // var to determine if component RESET Action works
-        greenState, // var to determine if component COLOR Action works
+        toggleDiv, // var to determine if component TOGGLE Action affects DOM
+        toggleState, // var to determine if component TOGGLE Action affects State
+        selectState, // var to determine if component SELECT Action works
+        deselectState, // var to determine if component DESELECT Action works
         mountsDOM; // var to determine if component mounts on DOM
 
     beforeEach(function(done){
@@ -32,31 +31,26 @@ describe('boilerplateRedux browser tests', function() {
           done: function (err, window) {
             var $ = window.$;
 
-            var boilerplateRedux = new window.IIIFComponents.ComponentBoilerplateRedux({
-                    element: "#boilerplate-redux",
-                    color: "blue",
-                    size: 100
+            var buttonRedux = new window.IIIFComponents.ButtonComponentRedux({
+                    element: "#button-component-redux",
+                    selected: false
                 });
 
             foo = true;
-            size = boilerplateRedux.options.size;
-            color = boilerplateRedux.options.color;
-            initialState = boilerplateRedux.getState();
+            selected = buttonRedux.options.selected;
+            //label = buttonRedux.options.label;
+            initialState = buttonRedux.getState();
 
-            mountsDOM = $( "#boilerplate-redux > div" ).length;
+            mountsDOM = $( "#button-component-redux > button" ).length;
 
-            $( "#grow10" ).trigger( "click" );
-            grow10State = boilerplateRedux.getState();
-            grow10Div = $( "#boilerplate-redux > div" ).width();
-            $( "#grow50" ).trigger( "click" );
-            grow50State = boilerplateRedux.getState();
-            $( "#reset" ).trigger( "click" );
-            resetState = boilerplateRedux.getState();
+            $( "#button-component-redux" ).trigger( "click" );
+            toggleState = buttonRedux.getState();
+            toggleDiv = $( "#button-component-redux > button" ).text();
 
-            // doesn't trigger the change event
-            $( "#green" ).prop( "checked", true );
-            // ^^ why not?
-            greenState = boilerplateRedux.getState();
+            $( "#select-all" ).trigger( "click" );
+            selectState = buttonRedux.getState();
+            $( "#deselect-all" ).trigger( "click" );
+            deselectState = buttonRedux.getState();
 
             done();
           }
@@ -72,30 +66,30 @@ describe('boilerplateRedux browser tests', function() {
         expect(mountsDOM).to.equal(1);
     });
 
-    it('has a size option of 100', function() {
-        expect(size).to.equal(100);
+    it('has a selected option of false', function() {
+        expect(selected).to.be.false;
     });
 
-    it('has a color option of blue', function() {
-        expect(color).to.equal("blue");
-    });
+    // it('has a label of "foo"', function() {
+    //     expect(label).to.equal("foo");
+    // });
 
     it('has an initial state determined by options', function() {
-        expect(initialState.color).to.equal("blue");
-        expect(initialState.count).to.equal(100);
+        //expect(initialState.label).to.equal("foo");
+        expect(initialState.selected).to.be.false;
     });
 
-    it('count increases by 10 when GROW Action is dispatched with a param of 10', function() {
-        expect(grow10State.count).to.equal(110);
-        expect(grow10Div).to.equal(210); // this.options.size + state.count
+    it('selected toggles when TOGGLE Action is dispatched', function() {
+        expect(toggleState.selected).to.be.true;
+        expect(toggleDiv).to.equal("true");
     });
 
-    it('count increases by 50 when GROW Action is dispatched with a param of 50', function() {
-        expect(grow50State.count).to.equal(160);
+    it('selected is true when SELECT Action is dispatched', function() {
+        expect(selectState.selected).to.be.true;
     });
 
-    it('count resets when RESET Action is dispatched', function() {
-        expect(resetState.count).to.equal(0);
+    it('selected is false when DESELECT Action is dispatched', function() {
+        expect(deselectState.selected).to.be.false;
     });
 
     it('foo should be true', function() {

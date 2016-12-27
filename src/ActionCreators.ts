@@ -1,16 +1,16 @@
 //import * as actionTypes from './ActionTypes';
 namespace IIIFComponents {
 
-    export function grow(i = 1) {
-      return { type: GROW, incrementBy: i }
+    export function select() {
+      return { type: SELECT }
     }
 
-    export function reset() {
-      return { type: RESET }
+    export function deselect() {
+      return { type: DESELECT }
     }
 
-    export function changeColor(c = "red") {
-      return { type: CHANGE_COLOR, color: c }
+    export function toggle() {
+      return { type: TOGGLE }
     }
 
 }

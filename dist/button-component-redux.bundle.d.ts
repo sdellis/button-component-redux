@@ -8392,23 +8392,21 @@ declare module "constants" {
     export var UV_UDP_REUSEADDR: number;
 }
 declare namespace IIIFComponents {
-    function grow(i?: number): {
-        type: string;
-        incrementBy: number;
-    };
-    function reset(): {
+    function select(): {
         type: string;
     };
-    function changeColor(c?: string): {
+    function deselect(): {
         type: string;
-        color: string;
+    };
+    function toggle(): {
+        type: string;
     };
 }
 
 declare namespace IIIFComponents {
-    const GROW: string;
-    const RESET: string;
-    const CHANGE_COLOR: string;
+    const SELECT: string;
+    const DESELECT: string;
+    const TOGGLE: string;
 }
 
 declare const Redux: any;
@@ -8417,38 +8415,33 @@ declare const diff: any;
 declare const patch: any;
 declare const createElement: any;
 declare namespace IIIFComponents {
-    class ComponentBoilerplateRedux extends _Components.BaseComponent {
-        options: IComponentBoilerplateReduxOptions;
+    class ButtonComponentRedux extends _Components.BaseComponent {
+        options: IButtonComponentReduxOptions;
         rootNode: any;
         tree: any;
         private _store;
-        constructor(options: IComponentBoilerplateReduxOptions);
+        constructor(options: IButtonComponentReduxOptions);
         stateChanged(new_state: any): void;
         protected _init(): boolean;
         getState(): any;
         private _render(state);
         private _updateView();
-        protected _getDefaultOptions(): IComponentBoilerplateReduxOptions;
+        protected _getDefaultOptions(): IButtonComponentReduxOptions;
         protected _resize(): void;
     }
 }
-declare namespace IIIFComponents.ComponentBoilerplateRedux {
+declare namespace IIIFComponents.ButtonComponentRedux {
     class Events {
         static STATECHANGED: string;
     }
 }
 
 declare namespace IIIFComponents {
-    interface IComponentBoilerplateReduxOptions extends _Components.IBaseComponentOptions {
-        color?: string;
-        size?: number;
+    interface IButtonComponentReduxOptions extends _Components.IBaseComponentOptions {
+        selected?: boolean;
     }
 }
 
 declare namespace IIIFComponents {
-    function color(state: string, action: any): any;
-}
-
-declare namespace IIIFComponents {
-    function count(state: number, action: any): any;
+    function selected(state: boolean, action: any): boolean;
 }

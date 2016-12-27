@@ -1,30 +1,28 @@
-// component-boilerplate-redux v1.0.0 https://github.com/viewdir/component-boilerplate#readme
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.componentBoilerplateRedux = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+// button-component-redux v1.0.0 https://github.com/viewdir/component-boilerplate#readme
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.buttonComponentRedux = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global){
 //import * as actionTypes from './ActionTypes';
 var IIIFComponents;
 (function (IIIFComponents) {
-    function grow(i) {
-        if (i === void 0) { i = 1; }
-        return { type: IIIFComponents.GROW, incrementBy: i };
+    function select() {
+        return { type: IIIFComponents.SELECT };
     }
-    IIIFComponents.grow = grow;
-    function reset() {
-        return { type: IIIFComponents.RESET };
+    IIIFComponents.select = select;
+    function deselect() {
+        return { type: IIIFComponents.DESELECT };
     }
-    IIIFComponents.reset = reset;
-    function changeColor(c) {
-        if (c === void 0) { c = "red"; }
-        return { type: IIIFComponents.CHANGE_COLOR, color: c };
+    IIIFComponents.deselect = deselect;
+    function toggle() {
+        return { type: IIIFComponents.TOGGLE };
     }
-    IIIFComponents.changeColor = changeColor;
+    IIIFComponents.toggle = toggle;
 })(IIIFComponents || (IIIFComponents = {}));
 
 var IIIFComponents;
 (function (IIIFComponents) {
-    IIIFComponents.GROW = 'GROW';
-    IIIFComponents.RESET = 'RESET';
-    IIIFComponents.CHANGE_COLOR = 'CHANGE_COLOR';
+    IIIFComponents.SELECT = 'SELECT';
+    IIIFComponents.DESELECT = 'DESELECT';
+    IIIFComponents.TOGGLE = 'TOGGLE';
 })(IIIFComponents || (IIIFComponents = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
@@ -39,35 +37,33 @@ var patch = require('virtual-dom/patch');
 var createElement = require('virtual-dom/create-element');
 var IIIFComponents;
 (function (IIIFComponents) {
-    var ComponentBoilerplateRedux = (function (_super) {
-        __extends(ComponentBoilerplateRedux, _super);
-        function ComponentBoilerplateRedux(options) {
+    var ButtonComponentRedux = (function (_super) {
+        __extends(ButtonComponentRedux, _super);
+        function ButtonComponentRedux(options) {
             _super.call(this, options);
             this._init();
             this._resize();
         }
         // events
-        ComponentBoilerplateRedux.prototype.stateChanged = function (new_state) {
-            this._emit(ComponentBoilerplateRedux.Events.STATECHANGED, new_state);
+        ButtonComponentRedux.prototype.stateChanged = function (new_state) {
+            this._emit(ButtonComponentRedux.Events.STATECHANGED, new_state);
         };
-        ComponentBoilerplateRedux.prototype._init = function () {
+        ButtonComponentRedux.prototype._init = function () {
             var _this = this;
             var success = _super.prototype._init.call(this);
             if (!success) {
-                console.error("Component failed to initialise");
+                console.error("Button Component failed to initialise");
             }
             // Initialise the state and document/view
-            var initialState = { count: this.options.size, color: this.options.color }; // We need some app data.
+            var initialState = { selected: this.options.selected };
             this.tree = this._render(initialState); // We need an initial tree
             this.rootNode = createElement(this.tree); // Create an initial root DOM node ...
-            //document.body.appendChild(this.rootNode);    // ... and it should be in the document
             this._$element.append(this.rootNode);
             // main reducer
             function app(state, action) {
                 if (state === void 0) { state = initialState; }
                 return {
-                    count: IIIFComponents.count(state.count, action),
-                    color: IIIFComponents.color(state.color, action)
+                    selected: IIIFComponents.selected(state.selected, action)
                 };
             }
             this._store = Redux.createStore(app);
@@ -77,37 +73,24 @@ var IIIFComponents;
             // Add Event Listeners
             // Note: The only way to mutate the internal state is to dispatch an action.
             var that = this;
-            $('#grow10').click(function () { return _this._store.dispatch(IIIFComponents.grow(10)); });
-            $('#grow50').click(function () { return _this._store.dispatch(IIIFComponents.grow(50)); });
-            $('#reset').click(function () { return _this._store.dispatch(IIIFComponents.reset()); });
-            $('input[type=radio][name=color]').change(function () {
-                that._store.dispatch(IIIFComponents.changeColor(this.value));
-            });
-            // $('#color-buttons > label').on('click', (event) => {
-            //     event.stopPropagation();
-            //     event.preventDefault();
-            //     that._store.dispatch(changeColor($(event.currentTarget).children("input").val()));
-            // });
+            $(this._$element).click(function () { return _this._store.dispatch(IIIFComponents.toggle()); });
+            $('#deselect-all').click(function () { return _this._store.dispatch(IIIFComponents.deselect()); });
+            $('#select-all').click(function () { return _this._store.dispatch(IIIFComponents.select()); });
             return success;
         };
-        ComponentBoilerplateRedux.prototype.getState = function () {
+        ButtonComponentRedux.prototype.getState = function () {
             return this._store.getState();
         };
         // Create a function that declares what the DOM should look like
-        ComponentBoilerplateRedux.prototype._render = function (state) {
-            return h('div', {
+        ButtonComponentRedux.prototype._render = function (state) {
+            return h('button.btn', {
                 style: {
-                    textAlign: 'center',
-                    margin: '50px',
-                    lineHeight: (100 + state.count) + 'px',
-                    border: '1px solid ' + state.color,
-                    width: (this.options.size + state.count) + 'px',
-                    height: (this.options.size + state.count) + 'px'
+                    textAlign: 'center'
                 }
-            }, [String(state.count)]);
+            }, [String(state.selected)]);
         };
         // where we update the template
-        ComponentBoilerplateRedux.prototype._updateView = function () {
+        ButtonComponentRedux.prototype._updateView = function () {
             var newState = this._store.getState();
             var newTree = this._render(newState);
             var patches = diff(this.tree, newTree);
@@ -115,37 +98,36 @@ var IIIFComponents;
             this.tree = newTree;
             this.stateChanged(newState); //fire event
         };
-        ComponentBoilerplateRedux.prototype._getDefaultOptions = function () {
+        ButtonComponentRedux.prototype._getDefaultOptions = function () {
             return {
-                color: "red",
-                size: 100
+                selected: false
             };
         };
-        ComponentBoilerplateRedux.prototype._resize = function () {
+        ButtonComponentRedux.prototype._resize = function () {
         };
-        return ComponentBoilerplateRedux;
+        return ButtonComponentRedux;
     }(_Components.BaseComponent));
-    IIIFComponents.ComponentBoilerplateRedux = ComponentBoilerplateRedux;
+    IIIFComponents.ButtonComponentRedux = ButtonComponentRedux;
 })(IIIFComponents || (IIIFComponents = {}));
 var IIIFComponents;
 (function (IIIFComponents) {
-    var ComponentBoilerplateRedux;
-    (function (ComponentBoilerplateRedux) {
+    var ButtonComponentRedux;
+    (function (ButtonComponentRedux) {
         var Events = (function () {
             function Events() {
             }
             Events.STATECHANGED = 'stateChanged';
             return Events;
         }());
-        ComponentBoilerplateRedux.Events = Events;
-    })(ComponentBoilerplateRedux = IIIFComponents.ComponentBoilerplateRedux || (IIIFComponents.ComponentBoilerplateRedux = {}));
+        ButtonComponentRedux.Events = Events;
+    })(ButtonComponentRedux = IIIFComponents.ButtonComponentRedux || (IIIFComponents.ButtonComponentRedux = {}));
 })(IIIFComponents || (IIIFComponents = {}));
 (function (g) {
     if (!g.IIIFComponents) {
         g.IIIFComponents = IIIFComponents;
     }
     else {
-        g.IIIFComponents.ComponentBoilerplateRedux = IIIFComponents.ComponentBoilerplateRedux;
+        g.IIIFComponents.ButtonComponentRedux = IIIFComponents.ButtonComponentRedux;
     }
 })(global);
 
@@ -153,39 +135,20 @@ var IIIFComponents;
 
 var IIIFComponents;
 (function (IIIFComponents) {
-    function color(state, action) {
-        if (state === void 0) { state = 'red'; }
+    function selected(state, action) {
+        if (state === void 0) { state = false; }
         switch (action.type) {
-            case IIIFComponents.CHANGE_COLOR:
-                return action.color;
+            case IIIFComponents.SELECT:
+                return true;
+            case IIIFComponents.DESELECT:
+                return false;
+            case IIIFComponents.TOGGLE:
+                return !state;
             default:
                 return state;
         }
     }
-    IIIFComponents.color = color;
-})(IIIFComponents || (IIIFComponents = {}));
-
-var IIIFComponents;
-(function (IIIFComponents) {
-    function count(state, action) {
-        if (state === void 0) { state = 0; }
-        switch (action.type) {
-            case IIIFComponents.GROW:
-                return state + action.incrementBy;
-            //*
-            // Leaving this here for reference,
-            // in case you want to return an object
-            //*
-            //   return Object.assign({}, state, {
-            //     count: state + action.incrementBy
-            //   })
-            case IIIFComponents.RESET:
-                return 0;
-            default:
-                return state;
-        }
-    }
-    IIIFComponents.count = count;
+    IIIFComponents.selected = selected;
 })(IIIFComponents || (IIIFComponents = {}));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -1239,8 +1202,7 @@ function baseGetTag(value) {
   if (value == null) {
     return value === undefined ? undefinedTag : nullTag;
   }
-  value = Object(value);
-  return (symToStringTag && symToStringTag in value)
+  return (symToStringTag && symToStringTag in Object(value))
     ? getRawTag(value)
     : objectToString(value);
 }
