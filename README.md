@@ -1,15 +1,12 @@
-# component-boilerplate-redux
+# button-component-redux
 
-http://viewdir.github.io/component-boilerplate-redux/examples/
+http://viewdir.github.io/button-component-redux/examples/
 
     npm install
 
     gulp
 
     gulp examples
-    
+
 ##Notes
-
-###Recommended Best Practices
-
-- https://gist.github.com/edsilv/83221d47fc262230d04fbcdc32dc1d98
+Simple button with the following actions to change state: toggle, select, deselect
